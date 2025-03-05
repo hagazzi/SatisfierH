@@ -58,11 +58,11 @@ public sealed class CraftTurnin
     }
 
     // TODO: job selection
-    public static uint GetRecipeId(uint craftedItemId) => Service.LuminaRow<RecipeLookup>(craftedItemId)?.CRP.RowId ?? 0;
+    public static uint GetRecipeId(uint craftedItemId) => Service.LuminaRow<RecipeLookup>(craftedItemId)?.CUL.RowId ?? 0;
 
     public static (uint id, int count) GetCraftIngredient(uint craftedItemId)
     {
-        var recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.CRP.Value;
+        var recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.CUL.Value;
         return recipe != null ? (recipe.Value.Ingredient[0].RowId, recipe.Value.AmountIngredient[0]) : default;
     }
 

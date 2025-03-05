@@ -23,7 +23,7 @@ public sealed class AutoCraft(NPCInfo npc, IDalamudPluginInterface dalamud) : Au
         Status = "Teleporting to zone";
         await TeleportTo(npc.TerritoryId, npc.CraftData.VendorLocation);
 
-        var turnInItemId = npc.TurnInItems[7];
+        var turnInItemId = npc.TurnInItems[0];
         var remainingCrafts = remainingTurnins - Game.NumItemsInInventory(turnInItemId, 1);
         if (remainingCrafts > 0)
         {
@@ -42,7 +42,7 @@ public sealed class AutoCraft(NPCInfo npc, IDalamudPluginInterface dalamud) : Au
 
         Status = $"Turning in {remainingTurnins}x {ItemName(turnInItemId)}";
         await MoveTo(npc.CraftData.TurnInLocation, 3);
-        await TurnIn(npc.Index, npc.CraftData.TurnInInstanceId, npc.TurnInItems[7], 0, remainingTurnins);
+        await TurnIn(npc.Index, npc.CraftData.TurnInInstanceId, npc.TurnInItems[0], 0, remainingTurnins);
     }
 
     private async Task BuyFromShop(ulong vendorInstanceId, uint shopId, uint itemId, int count)
