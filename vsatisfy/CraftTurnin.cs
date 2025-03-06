@@ -6,6 +6,7 @@ using Lumina.Data.Parsing.Layer;
 using Lumina.Excel.Sheets;
 using System.Numerics;
 using System.Linq.Expressions;
+using FFXIVClientStructs.STD.Helper;
 
 namespace Satisfy;
 
@@ -63,64 +64,75 @@ public sealed class CraftTurnin
     // TODO: job selection
     public static uint GetRecipeId(uint craftedItemId)
     {
+        var localplayer = Plugin.ClientState.LocalPlayer;
         var currentjob = Plugin.ClientState.LocalPlayer!.ClassJob.RowId;
-        switch (currentjob)
+        if (localplayer !=null)
         {
-            case 8:
-                return Service.LuminaRow<RecipeLookup>(craftedItemId)?.CRP.RowId ?? 0;
-            case 9:
-                return Service.LuminaRow<RecipeLookup>(craftedItemId)?.BSM.RowId ?? 0;
-            case 10:
-                return Service.LuminaRow<RecipeLookup>(craftedItemId)?.ARM.RowId ?? 0;
-            case 11:
-                return Service.LuminaRow<RecipeLookup>(craftedItemId)?.GSM.RowId ?? 0;
-            case 12:
-                return Service.LuminaRow<RecipeLookup>(craftedItemId)?.LTW.RowId ?? 0;
-            case 13:
-                return Service.LuminaRow<RecipeLookup>(craftedItemId)?.WVR.RowId ?? 0;
-            case 14:
-                return Service.LuminaRow<RecipeLookup>(craftedItemId)?.ALC.RowId ?? 0;
-            case 15:
-                return Service.LuminaRow<RecipeLookup>(craftedItemId)?.CUL.RowId ?? 0;
-            default:
-                return 0;
+            switch (currentjob)
+            {
+                case 8:
+                    return Service.LuminaRow<RecipeLookup>(craftedItemId)?.CRP.RowId ?? 0;
+                case 9:
+                    return Service.LuminaRow<RecipeLookup>(craftedItemId)?.BSM.RowId ?? 0;
+                case 10:
+                    return Service.LuminaRow<RecipeLookup>(craftedItemId)?.ARM.RowId ?? 0;
+                case 11:
+                    return Service.LuminaRow<RecipeLookup>(craftedItemId)?.GSM.RowId ?? 0;
+                case 12:
+                    return Service.LuminaRow<RecipeLookup>(craftedItemId)?.LTW.RowId ?? 0;
+                case 13:
+                    return Service.LuminaRow<RecipeLookup>(craftedItemId)?.WVR.RowId ?? 0;
+                case 14:
+                    return Service.LuminaRow<RecipeLookup>(craftedItemId)?.ALC.RowId ?? 0;
+                case 15:
+                    return Service.LuminaRow<RecipeLookup>(craftedItemId)?.CUL.RowId ?? 0;
+                default:
+                    return 0;
+            }
         }
+        return 0;
     }
 
     public static (uint id, int count) GetCraftIngredient(uint craftedItemId)
     {
-        var currentjob = Plugin.ClientState.LocalPlayer!.ClassJob.RowId;
+        var localplayer = Plugin.ClientState.LocalPlayer;
         var recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.CUL.Value;
-        switch (currentjob)
+        if (localplayer != null)
         {
-            case 8:
-                recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.CRP.Value;
-                break;
-            case 9:
-                recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.BSM.Value;
-                break;
-            case 10:
-                recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.ARM.Value;
-                break;
-            case 11:
-                recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.GSM.Value;
-                break;
-            case 12:
-                recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.LTW.Value;
-                break;
-            case 13:
-                recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.WVR.Value;
-                break;
-            case 14:
-                recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.ALC.Value;
-                break;
-            case 15:
-                recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.CUL.Value;
-                break;
-            default:
-                recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.CUL.Value;
-                break;
+            var currentjob = Plugin.ClientState.LocalPlayer!.ClassJob.RowId;
+            switch (currentjob)
+            {
+                case 8:
+                    recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.CRP.Value;
+                    break;
+                case 9:
+                    recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.BSM.Value;
+                    break;
+                case 10:
+                    recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.ARM.Value;
+                    break;
+                case 11:
+                    recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.GSM.Value;
+                    break;
+                case 12:
+                    recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.LTW.Value;
+                    break;
+                case 13:
+                    recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.WVR.Value;
+                    break;
+                case 14:
+                    recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.ALC.Value;
+                    break;
+                case 15:
+                    recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.CUL.Value;
+                    break;
+                default:
+                    recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.CUL.Value;
+                    break;
+            }
+            return recipe != null ? (recipe.Value.Ingredient[0].RowId, recipe.Value.AmountIngredient[0]) : default;
         }
+        recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.CUL.Value;
         return recipe != null ? (recipe.Value.Ingredient[0].RowId, recipe.Value.AmountIngredient[0]) : default;
     }
 
