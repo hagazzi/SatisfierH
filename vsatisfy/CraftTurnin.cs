@@ -62,10 +62,11 @@ public sealed class CraftTurnin
     }
 
     // TODO: job selection
+    // rather than job selection im using current job instead, setting default as CUL 
     public static uint GetRecipeId(uint craftedItemId)
     {
-        var localplayer = Plugin.ClientState.LocalPlayer;
-        var currentjob = Plugin.ClientState.LocalPlayer!.ClassJob.RowId;
+        var localplayer = Service.ClientState.LocalPlayer;
+        var currentjob = Service.ClientState.LocalPlayer!.ClassJob.RowId;
         if (localplayer !=null)
         {
             switch (currentjob)
@@ -87,7 +88,7 @@ public sealed class CraftTurnin
                 case 15:
                     return Service.LuminaRow<RecipeLookup>(craftedItemId)?.CUL.RowId ?? 0;
                 default:
-                    return 0;
+                    return Service.LuminaRow<RecipeLookup>(craftedItemId)?.CUL.RowId ?? 0;
             }
         }
         return 0;
@@ -95,11 +96,11 @@ public sealed class CraftTurnin
 
     public static (uint id, int count) GetCraftIngredient(uint craftedItemId)
     {
-        var localplayer = Plugin.ClientState.LocalPlayer;
+        var localplayer = Service.ClientState.LocalPlayer;
         var recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.CUL.Value;
         if (localplayer != null)
         {
-            var currentjob = Plugin.ClientState.LocalPlayer!.ClassJob.RowId;
+            var currentjob = Service.ClientState.LocalPlayer!.ClassJob.RowId;
             switch (currentjob)
             {
                 case 8:
@@ -132,7 +133,6 @@ public sealed class CraftTurnin
             }
             return recipe != null ? (recipe.Value.Ingredient[0].RowId, recipe.Value.AmountIngredient[0]) : default;
         }
-        recipe = Service.LuminaRow<RecipeLookup>(craftedItemId)?.CUL.Value;
         return recipe != null ? (recipe.Value.Ingredient[0].RowId, recipe.Value.AmountIngredient[0]) : default;
     }
 
